@@ -16,6 +16,16 @@ public class StudentRepository {
     private Student student;
     private ArrayList<Student> studentList;
 
+    public ArrayList<Student> selectStudent(Student student,DBOperator dbOperator) {
+        if(student!=null) {
+            this.student=student;
+            if(dbOperator!=null)
+                this.dbOperator=dbOperator;
+            return selectStudentList();
+        }
+        else return null;
+
+    }
 
     public ArrayList<Student> selectStudentList(){
        ArrayList<Student> studentList = new ArrayList<Student>();
@@ -66,8 +76,8 @@ public class StudentRepository {
 
         try {
             while(rs.next()) {
-                Define fakulteIdTanim = new Define();
-                Define bolumIdTanim = new Define();
+                Define faculty = new Define();
+                Define department = new Define();
                 DefineRepository defineRepository = new DefineRepository();
                 studentClass = new Student();
                 studentClass.setId(rs.getInt("ID"));
@@ -77,13 +87,13 @@ public class StudentRepository {
                 studentClass.setAddress(rs.getString("Address"));
                 studentClass.setPhoneNumber(rs.getString("PhoneNumber"));
                 studentClass.setSituation(rs.getInt("Situation"));
-                fakulteIdTanim.setId(rs.getInt("Faculty"));
-                fakulteIdTanim = defineRepository.selectDefine(fakulteIdTanim, dbOperator).get(0);
-                studentClass.setFaculty(fakulteIdTanim);
+                faculty.setId(rs.getInt("Faculty"));
+                faculty = defineRepository.selectDefine(faculty, dbOperator).get(0);
+                studentClass.setFaculty(faculty);
 
-                bolumIdTanim.setId(rs.getInt("Department"));
-                bolumIdTanim = defineRepository.selectDefine(bolumIdTanim, dbOperator).get(0);
-                studentClass.setDepartment(bolumIdTanim);
+                department.setId(rs.getInt("Department"));
+                department = defineRepository.selectDefine(department, dbOperator).get(0);
+                studentClass.setDepartment(department);
 
                 studentList.add(studentClass);
             }
@@ -102,7 +112,7 @@ public class StudentRepository {
     }
 
 
-    public RestResult insertOgrenci(Student student, DBOperator dbOperatorIn) {
+    public RestResult insertStudent(Student student, DBOperator dbOperatorIn) {
         RestResult restResult = new RestResult();
         int result=0;
         DBOperator dbOperator=null;
@@ -132,14 +142,91 @@ public class StudentRepository {
 
         if(result==0) {
             dbOperator.rollback();
-            restResult.setMessage(StaticConstants.pr);
-            restResult.setKod(StaticConstants.ISLEM_HATA);
+            restResult.setMessage(StaticConstants.PROCESS_ERROR_MESSAGE);
+            restResult.setCode(StaticConstants.PROCESS_ERROR);
         }
         else {
             dbOperator.commit();
-            restResult.setMsj(StaticConstants.ISLEM_OK_STR);
-            restResult.setKod(StaticConstants.ISLEM_OK);
+            restResult.setMessage(StaticConstants.PROCESS_OKAY_MESSAGE);
+            restResult.setCode(StaticConstants.PROCESS_OKAY);
         }
+        dbOperator.closeConnection();
+        return restResult;
+    }
+
+    public RestResult deleteStudent(Student student,DBOperator dbOperatorIn) {
+        RestResult restResult = new RestResult();
+        int result=0;
+        DBOperator dbOperator=null;
+        String sqlString="";
+        List<Object> parmsList = new ArrayList<Object>();
+        if(dbOperatorIn==null)
+            dbOperator=new DBOperator();
+        else {
+            dbOperator=dbOperatorIn;
+        }
+
+        sqlString="UPDATE STUDENT SET Situation=? where ID=?";
+
+        parmsList.add(StaticConstants.STATUS_PASSİVE);
+        parmsList.add(student.getId());
+
+        result=dbOperator.executeAndUpdate(sqlString, parmsList);
+
+        if(result==0) {
+            dbOperator.rollback();
+            restResult.setMessage(StaticConstants.PROCESS_ERROR_MESSAGE);
+            restResult.setCode(StaticConstants.PROCESS_ERROR);
+        }
+        else {
+            dbOperator.commit();
+            restResult.setMessage(StaticConstants.PROCESS_OKAY_MESSAGE);
+            restResult.setCode(StaticConstants.PROCESS_OKAY);
+        }
+        dbOperator.closeStatement();
+        dbOperator.closeConnection();
+        return restResult;
+    }
+
+
+    public RestResult updateStudent(Student student,DBOperator dbOperatorIn) {
+        RestResult restResult = new RestResult();
+        int result=0;
+        DBOperator dbOperator=null;
+        String sqlString="";
+        List<Object> parmsList = new ArrayList<Object>();
+        if(dbOperatorIn==null)
+            dbOperator=new DBOperator();
+        else {
+            dbOperator=dbOperatorIn;
+        }
+
+        sqlString="UPDATE STUDENT SET Name=? , Surname=? , Mail=?,"
+                + " Address=?, PhoneNumber=?, Faculty=?, Department=?"
+                + "where ID=?";
+
+        parmsList.add(student.getName());
+        parmsList.add(student.getSurname());
+        parmsList.add(student.getMail());
+        parmsList.add(student.getAddress());
+        parmsList.add(student.getPhoneNumber());
+        parmsList.add(student.getFaculty().getId());
+        parmsList.add(student.getDepartment().getId());
+        parmsList.add(student.getId());
+
+        result=dbOperator.executeAndUpdate(sqlString, parmsList);
+
+        if(result==0) {
+            dbOperator.rollback();
+            restResult.setMessage(StaticConstants.PROCESS_ERROR_MESSAGE);
+            restResult.setCode(StaticConstants.PROCESS_ERROR);
+        }
+        else {
+            dbOperator.commit();
+            restResult.setMessage(StaticConstants.PROCESS_OKAY_MESSAGE);
+            restResult.setCode(StaticConstants.PROCESS_OKAY);
+        }
+        dbOperator.closeStatement();
         dbOperator.closeConnection();
         return restResult;
     }
