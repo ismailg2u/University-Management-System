@@ -15,7 +15,7 @@ public class StudentServiceImpl implements StudentService {
     StudentMapper studentMapper = new StudentMapper();
 
     @Override
-    public ArrayList<StudentDTO> selectTeacher(StudentDTO studentDTO) {
+    public ArrayList<StudentDTO> selectStudent(StudentDTO studentDTO) {
         ArrayList<Student> studentList = new ArrayList<>();
         Student student = new Student();
         student = studentMapper.mapToEntity(studentDTO);

@@ -41,7 +41,7 @@ public class StudentRepository {
             dbOperator=this.dbOperator;
         }
 
-        String sqlString="SELECT ID,Name,Surname,Mail,Address,PhoneNumber,Faculty,Department,Situation, FROM student T "
+        String sqlString="SELECT ID,Name,Surname,Mail,Address,PhoneNumber,Faculty,Department,Situation FROM student T "
                 + " WHERE 1=1 " +
                 ""+((student.getId()<=0 )? "" : " AND T.ID = ? " )+""+
                 ""+((student.getName()==null || student.getName()=="" )? "" : " AND T.Name = ? " )+""+
@@ -49,8 +49,8 @@ public class StudentRepository {
                 ""+((student.getMail()==null || student.getMail()=="" )? "" : " AND T.Mail = ? " )+""+
                 ""+((student.getAddress()==null || student.getAddress()=="" )? "" : " AND T.Address = ? " )+""+
                 ""+((student.getPhoneNumber()==null )? "" : " AND T.PhoneNumber = ? " )+""+
-                ""+((student.getFaculty().getId()<=0 )? "" : " AND T.Faculty = ? " )+""+
-                ""+((student.getDepartment().getId()<=0 )? "" : " AND T.Department = ? " )+""+
+                ""+((student.getFaculty()==null ||student.getFaculty().getId()<=0 )? "" : " AND T.Faculty = ? " )+""+
+                ""+((student.getDepartment()==null ||student.getDepartment().getId()<=0 )? "" : " AND T.Department = ? " )+""+
                 ""+((student.getSituation()<=-1 )? "" : " AND T.Situation = ? " )+"";
 
 
@@ -65,9 +65,9 @@ public class StudentRepository {
             parmsList.add(student.getMail());
         if(student.getPhoneNumber()!= null && student.getPhoneNumber()!="")
             parmsList.add(student.getPhoneNumber());
-        if(student.getFaculty().getId()>0)
+        if(student.getFaculty()!= null &&student.getFaculty().getId()>0)
             parmsList.add(student.getFaculty().getId());
-        if(student.getDepartment().getId()>0)
+        if(student.getDepartment()!= null &&student.getDepartment().getId()>0)
             parmsList.add(student.getDepartment().getId());
         if(student.getSituation()!=-1)
             parmsList.add(student.getSituation());
@@ -183,7 +183,7 @@ public class StudentRepository {
             restResult.setMessage(StaticConstants.PROCESS_OKAY_MESSAGE);
             restResult.setCode(StaticConstants.PROCESS_OKAY);
         }
-        dbOperator.closeStatement();
+        dbOperator.closePreparedStatement();
         dbOperator.closeConnection();
         return restResult;
     }
@@ -203,7 +203,7 @@ public class StudentRepository {
 
         sqlString="UPDATE STUDENT SET Name=? , Surname=? , Mail=?,"
                 + " Address=?, PhoneNumber=?, Faculty=?, Department=?"
-                + "where ID=?";
+                + " where ID=?";
 
         parmsList.add(student.getName());
         parmsList.add(student.getSurname());
@@ -226,7 +226,7 @@ public class StudentRepository {
             restResult.setMessage(StaticConstants.PROCESS_OKAY_MESSAGE);
             restResult.setCode(StaticConstants.PROCESS_OKAY);
         }
-        dbOperator.closeStatement();
+        dbOperator.closePreparedStatement();
         dbOperator.closeConnection();
         return restResult;
     }

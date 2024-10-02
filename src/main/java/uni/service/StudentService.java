@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public interface StudentService {
 
-    public ArrayList<StudentDTO> selectTeacher(StudentDTO studentDTO);
+    public ArrayList<StudentDTO> selectStudent(StudentDTO studentDTO);
     public RestResult insertStudent(StudentDTO studentDTO);
     public RestResult deleteStudent(StudentDTO studentDTO);
     public RestResult updateStudent(StudentDTO studentDTO);

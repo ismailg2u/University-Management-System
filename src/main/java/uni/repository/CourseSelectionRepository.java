@@ -49,7 +49,7 @@ public class CourseSelectionRepository {
                 ""+((courseSelection.getId()<=0 )? "" : " AND T.ID = ? " )+""+
                 ""+((courseSelection.getStudentID().getId()<=0 )? "" : " AND T.StudentID = ? " )+""+
                 ""+((courseSelection.getCourseID().getId()<=0 )? "" : " AND T.CourseID = ? " )+""+
-                ""+((courseSelection.getSituation()<=0 )? "" : " AND T.Situation = ? " )+"";
+                ""+((courseSelection.getSituation()<=-1 )? "" : " AND T.Situation = ? " )+"";
 
         if(courseSelection.getId()>0)
             parmsList.add(courseSelection.getId());
@@ -57,7 +57,7 @@ public class CourseSelectionRepository {
             parmsList.add(courseSelection.getStudentID().getId());
         if(courseSelection.getCourseID().getId()>0)
             parmsList.add(courseSelection.getCourseID().getId());
-        if(courseSelection.getSituation()>0) ;
+        if(courseSelection.getSituation()!=-1) ;
         parmsList.add(courseSelection.getSituation());
 
         rs=dbOperator.selectStatement(sqlString, parmsList);
@@ -67,7 +67,7 @@ public class CourseSelectionRepository {
 
                 courseSelectionClass = new CourseSelection();
                 courseSelectionClass.setId(rs.getInt("ID"));
-                courseSelectionClass.setId(rs.getInt("Situation"));
+                courseSelectionClass.setSituation(rs.getInt("Situation"));
 
                 Student student = new Student();
                 student.setId(rs.getInt("StudentID"));
@@ -168,7 +168,7 @@ public class CourseSelectionRepository {
             restResult.setMessage(StaticConstants.PROCESS_OKAY_MESSAGE);
             restResult.setCode(StaticConstants.PROCESS_OKAY);
         }
-        dbOperator.closeStatement();
+        dbOperator.closePreparedStatement();
         dbOperator.closeConnection();
         return restResult;
 
@@ -209,7 +209,7 @@ public class CourseSelectionRepository {
             restResult.setMessage(StaticConstants.PROCESS_OKAY_MESSAGE);
             restResult.setCode(StaticConstants.PROCESS_OKAY);
         }
-        dbOperator.closeStatement();
+        dbOperator.closePreparedStatement();
         dbOperator.closeConnection();
         return restResult;
 

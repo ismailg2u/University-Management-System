@@ -50,14 +50,14 @@ public class CourseRepository {
                 ""+((course.getId()<=0 )? "" : " AND T.ID = ? " )+""+
                 ""+((course.getName()==null || course.getName()=="" )? "" : " AND T.Name = ? " )+""+
                 ""+((course.getDescription()==null || course.getDescription()=="" )? "" : " AND T.Description = ? " )+""+
-                ""+((course.getQuota()!=null)? "" : " AND T.Quota = ? " )+""+
-                ""+((course.getTerm().getId()<=0 )? "" : " AND T.Term = ? " )+""+
-                ""+((course.getCredit().getId()<=0 )? "" : " AND T.Credit = ? " )+""+
-                ""+((course.getTeacher().getId()<=0 )? "" : " AND T.Teacher = ? " )+""+
-                ""+((course.getCourseStatus().getId()<=0 )? "" : " AND T.Coursestatus = ? " )+""+
-                ""+((course.getFaculty().getId()<=0 )? "" : " AND T.Faculty = ? " )+"" +
-                ""+((course.getDepartment().getId()<=0 )? "" : " AND T.Department = ? " )+"" +
-                ""+((course.getSituation()<=0 )? "" : " AND T.Situation = ? " )+"";
+                ""+((course.getQuota()==null|| course.getQuota()=="")? "" : " AND T.Quota = ? " )+""+
+                ""+((course.getTerm()==null||course.getTerm().getId()<=0 )? "" : " AND T.Term = ? " )+""+
+                ""+((course.getCredit()==null||course.getCredit().getId()<=0 )? "" : " AND T.Credit = ? " )+""+
+                ""+((course.getTeacher()==null||course.getTeacher().getId()<=0 )? "" : " AND T.Teacher = ? " )+""+
+                ""+((course.getCourseStatus()==null||course.getCourseStatus().getId()<=0 )? "" : " AND T.Coursestatus = ? " )+""+
+                ""+((course.getFaculty()==null||course.getFaculty().getId()<=0 )? "" : " AND T.Faculty = ? " )+"" +
+                ""+((course.getDepartment()==null||course.getDepartment().getId()<=0 )? "" : " AND T.Department = ? " )+"" +
+                ""+((course.getSituation()<=-1 )? "" : " AND T.Situation = ? " )+"";
 
 
 
@@ -68,19 +68,19 @@ public class CourseRepository {
             parmsList.add(course.getName());
         if(course.getDescription()!= null && course.getDescription()!="")
             parmsList.add(course.getDescription());
-        if(course.getQuota()!=null)
+        if(course.getQuota()!=null&&course.getQuota()!="")
             parmsList.add(course.getQuota());
-        if(course.getTerm().getId()>0)
+        if(course.getTerm()!= null &&course.getTerm().getId()>0)
             parmsList.add(course.getTerm());
-        if(course.getCredit().getId()>0)
+        if(course.getCredit()!= null &&course.getCredit().getId()>0)
             parmsList.add(course.getCredit().getId());
-        if(course.getCourseStatus().getId()>0)
+        if(course.getCourseStatus()!= null &&course.getCourseStatus().getId()>0)
             parmsList.add(course.getCourseStatus().getId());
-        if(course.getFaculty().getId()>0)
+        if(course.getFaculty()!= null &&course.getFaculty().getId()>0)
             parmsList.add(course.getFaculty().getId());
-        if(course.getDepartment().getId()>0)
+        if(course.getDepartment()!= null &&course.getDepartment().getId()>0)
             parmsList.add(course.getDepartment().getId());
-        if(course.getSituation()>-1)
+        if(course.getSituation()!=-1)
             parmsList.add(course.getSituation());
 
         rs=dbOperator.selectStatement(sqlString, parmsList);
@@ -96,6 +96,7 @@ public class CourseRepository {
                 courseClass.setId(rs.getInt("ID"));
                 courseClass.setName(rs.getString("Name"));
                 courseClass.setDescription(rs.getString("Description"));
+                courseClass.setQuota(rs.getString("Quota"));
                 courseClass.setSituation(rs.getInt("Situation"));
 
                 defines.setId(rs.getInt("Term"));
@@ -154,8 +155,8 @@ public class CourseRepository {
             dbOperator=dbOperatorIn;
         }
 
-        sqlString="INSERT INTO course  (ID,Name,Description,Quota,Teacher,Department,Faculty,Term,Credit,Coursestatus,Situation)"
-                + " VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+        sqlString="INSERT INTO course  (Name,Description,Quota,Teacher,Department,Faculty,Term,Credit,Coursestatus,Situation)"
+                + " VALUES(?,?,?,?,?,?,?,?,?,?)";
 
         parmsList.add(course.getName());
         parmsList.add(course.getDescription());
@@ -218,7 +219,7 @@ public class CourseRepository {
             restResult.setMessage(StaticConstants.PROCESS_OKAY_MESSAGE);
             restResult.setCode(StaticConstants.PROCESS_OKAY);
         }
-        dbOperator.closeStatement();
+        dbOperator.closePreparedStatement();
         dbOperator.closeConnection();
         return restResult;
 
@@ -239,8 +240,8 @@ public class CourseRepository {
         }
 
         sqlString="UPDATE course SET Name=? ,  Description=? , Quota=?,"
-                + " Teacher=?, Department=?, Faculty=?, Term=?"
-                + " Credit=?, Coursestatus=?"
+                + " Teacher=?, Department=?, Faculty=?, Term=?,"
+                + " Credit=?, Coursestatus=? "
                 + "where ID=?";
 
 
@@ -268,7 +269,7 @@ public class CourseRepository {
             restResult.setMessage(StaticConstants.PROCESS_OKAY_MESSAGE);
             restResult.setCode(StaticConstants.PROCESS_OKAY);
         }
-        dbOperator.closeStatement();
+        dbOperator.closePreparedStatement();
         dbOperator.closeConnection();
         return restResult;
 

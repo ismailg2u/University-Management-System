@@ -44,17 +44,17 @@ public class DefineRepository {
             dbOperator=this.dbOperator;
         }
 
-        String sqlString="SELECT ID,definetypeID,Name,Situation FROM define T,definetype F"
+        String sqlString="SELECT T.ID,definetypeID,T.Name,T.Situation FROM define T,definetype F"
                 + " WHERE 1=1 " +
                 ""+((define.getId()<=0 )? "" : " AND T.ID = ? " )+""+
-                ""+((define.getDefineType().getId()<=0 )? "" : " AND T.definetypeID = ? " )+""+
+                ""+((define.getDefineType()==null||define.getDefineType().getId()<=0 )? "" : " AND T.definetypeID = ? " )+""+
                 ""+((define.getName()==null || define.getName()=="" )? "" : " AND T.Name = ? " )+""+
                 ""+((define.getSituation()==-1 )? "" : " AND T.Situation = ? " )+"";
 
 
         if(define.getId()>0)
             parmsList.add(define.getId());
-        if(define.getDefineType().getId()>0)
+        if(define.getDefineType()!=null&&define.getDefineType().getId()>0)
             parmsList.add(define.getDefineType().getId());
         if(define.getName()!= null && define.getName()!="")
             parmsList.add(define.getName());

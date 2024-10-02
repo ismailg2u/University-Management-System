@@ -51,9 +51,9 @@ public class TeacherRepository {
                 ""+((teacher.getMail()==null || teacher.getMail()=="" )? "" : " AND T.Mail = ? " )+""+
                 ""+((teacher.getAddress()==null || teacher.getAddress()=="" )? "" : " AND T.Address = ? " )+""+
                 ""+((teacher.getPhoneNumber()==null )? "" : " AND T.PhoneNumber = ? " )+""+
-                ""+((teacher.getFaculty().getId()<=0 )? "" : " AND T.Faculty = ? " )+""+
-                ""+((teacher.getDepartment().getId()<=0 )? "" : " AND T.Department = ? " )+""+
-                ""+((teacher.getTitle().getId()<=0 )? "" : " AND T.Title = ? " )+""+
+                ""+((teacher.getFaculty()==null||teacher.getFaculty().getId()<=0 )? "" : " AND T.Faculty = ? " )+""+
+                ""+((teacher.getDepartment()==null||teacher.getDepartment().getId()<=0 )? "" : " AND T.Department = ? " )+""+
+                ""+((teacher.getTitle()==null||teacher.getTitle().getId()<=0 )? "" : " AND T.Title = ? " )+""+
                 ""+((teacher.getSituation()<=-1 )? "" : " AND T.Situation = ? " )+"";
 
 
@@ -69,11 +69,11 @@ public class TeacherRepository {
             parmsList.add(teacher.getAddress());
         if(teacher.getPhoneNumber()!=null)
             parmsList.add(teacher.getPhoneNumber());
-        if(teacher.getFaculty().getId()>0)
+        if(teacher.getFaculty()!=null&&teacher.getFaculty().getId()>0)
             parmsList.add(teacher.getFaculty().getId());
-        if(teacher.getDepartment().getId()>0)
+        if(teacher.getDepartment()!=null&&teacher.getDepartment().getId()>0)
             parmsList.add(teacher.getDepartment().getId());
-        if(teacher.getTitle().getId()>0)
+        if(teacher.getTitle()!=null&&teacher.getTitle().getId()>0)
             parmsList.add(teacher.getTitle().getId());
         if(teacher.getSituation()!=-1)
             parmsList.add(teacher.getSituation());
@@ -202,7 +202,7 @@ public class TeacherRepository {
             restResult.setMessage(StaticConstants.PROCESS_OKAY_MESSAGE);
             restResult.setCode(StaticConstants.PROCESS_OKAY);
         }
-        dbOperator.closeStatement();
+        dbOperator.closePreparedStatement();
         dbOperator.closeConnection();
         return restResult;
 
@@ -223,7 +223,7 @@ public class TeacherRepository {
 
         sqlString="UPDATE teacher SET Name=? ,  Surname=? , Mail=?,"
                 + " Address=?, PhoneNumber=?, Faculty=?, Department=? ,  Title=?"
-                + "where ID=?";
+                + " where ID=?";
 
 
 
@@ -251,7 +251,7 @@ public class TeacherRepository {
             restResult.setMessage(StaticConstants.PROCESS_OKAY_MESSAGE);
             restResult.setCode(StaticConstants.PROCESS_OKAY);
         }
-        dbOperator.closeStatement();
+        dbOperator.closePreparedStatement();
         dbOperator.closeConnection();
         return restResult;
 
