@@ -82,11 +82,7 @@ public class DBOperator {
         }
     }
 
-    /**
-     *
-     * Firstly we create a rs variable. This variable will be the return value.
-     * Then we create an index value.This will be the
-     */
+
     public ResultSet selectStatement(String sql, List<Object> values) {
 
         ResultSet rs = null;
@@ -107,7 +103,7 @@ public class DBOperator {
                 else if (eleman instanceof Date)
                     ps.setDate(++index, (Date) eleman);
                 else {
-                    SQLException e = new SQLException("Boyle bir parametre tipi bulunamadı.");
+                    SQLException e = new SQLException("No such parameter type found.");
                 }
             }
             rs = ps.executeQuery();
@@ -142,7 +138,7 @@ public class DBOperator {
                 else if (eleman instanceof Date)
                     ps.setDate(++index, (Date) eleman);
                 else {
-                    SQLException e = new SQLException("Boyle bir parametre tipi bulunamadı.");
+                    SQLException e = new SQLException("No such parameter type found.");
                 }
             }
             result = ps.executeUpdate();
@@ -178,7 +174,7 @@ public class DBOperator {
                 else if (eleman instanceof Date)
                     ps.setDate(++index, (Date) eleman);
                 else {
-                    SQLException e = new SQLException("Boyle bir parametre tipi bulunamadı.");
+                    SQLException e = new SQLException("No such parameter type found.");
                 }
             }
             result = pst.executeUpdate();
@@ -192,9 +188,7 @@ public class DBOperator {
         return result;
     }
 
-    /**
-     *
-     */
+
 
     public ResultSet selectStatement(String sql) {
         ResultSet rs = null;
@@ -207,17 +201,7 @@ public class DBOperator {
         }
         return rs;
     }
-    /**
-     * Girilen sql querysini yerine getirerek(insert,update delete) işlemin başarılımı başarısızmı olduğunu 0
-     *  ve 1 lerle return eder
-     * @param sql
-     * @return int
-     * Önce int tipinde "result" değişkeni oluşturulur bu işlemin başarılı olup olmadığını anlamak için,
-     *  sonrasında yeni bir Statement değişkeni oluşturulur
-     * daha sonra oluşturulan "stmnt" değişkenindeki .executeUpdate() metodu kullanılarak gelen @param sql
-     * qurydini yerinee getirir , statement kapatılır ve result değeri reutrn edilir
-     *
-     */
+
     public int executeUpdate(String sql) {
         int result = 0;
         try {
@@ -229,18 +213,7 @@ public class DBOperator {
         }
         return result;
     }
-    /**
-     * Girilen sql querysini yerine getirerek eklenen yeni datanın "id"sini return eder
-     * @param sql
-     * @return int
-     * Önce int tipinde "result" değişkeni oluşturulur bunun sebebi eklenen yeni datadaki oluşturulan keyleri
-     *  çekmek için (Bu örnekte ID columunda oluşturulan keyleri çekmek için )
-     *  sonrasında yeni bir Statement değişkeni oluşturulur
-     * daha sonra oluşturulan "stmnt" değişkenindeki .executeUpdate() metodu kullanılarak gelen @param sql
-     * sorgusunu yerinee getirir ve Tablein içindeki "ID" columunda oluşturulan keyleri .getInt() metodu
-     * aracılığıyla çeker ve "result" değişkenine eşleriz en sonda da "result" değişkeni return edilir
-     *
-     */
+
 
 
     public int executeUpdateReturnValue(String sql) {

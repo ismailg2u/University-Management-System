@@ -15,7 +15,7 @@ public class ConnectionToDb {
       }
       catch (Exception  s) {
           s.printStackTrace();
-          System.out.println("No");
+          System.out.println("No connection");
           return null;
       }
 
